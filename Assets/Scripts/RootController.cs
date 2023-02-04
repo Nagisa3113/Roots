@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 
-[System.Serializable]
+[Serializable]
 public struct Point
 {
     public int index;
@@ -16,9 +15,12 @@ public class RootController : MonoBehaviour
 {
     public SpriteShapeRenderer ssr;
     public SpriteShapeController ssc;
+    public bool isActive;
+    public bool isUnderControl;
 
     public List<Point> points;
-    float speed = 0.4f;
+    private readonly float speed = 0.4f;
+
 
     private void Awake()
     {
@@ -26,103 +28,105 @@ public class RootController : MonoBehaviour
         ssc = GetComponent<SpriteShapeController>();
     }
 
-    // Start is called before the first frame update
-    void Start()
+    private void Update()
     {
+        if (!isUnderControl) return;
+        if (!GameManager.Instance.isGameStart || GameManager.Instance.isGameOver)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.A)) CreateNewPoint();
+
+        if (Input.GetKeyUp(KeyCode.A)) CreateNewPoint();
+
+        if (Input.GetKey(KeyCode.A)) ChangeDirection(-0.12f);
+
+        if (Input.GetKeyDown(KeyCode.D)) CreateNewPoint();
+
+        if (Input.GetKeyUp(KeyCode.D)) CreateNewPoint();
+
+        if (Input.GetKey(KeyCode.D)) ChangeDirection(0.12f);
+    }
+
+    private void FixedUpdate()
+    {
+        if (!isActive)
+            return;
+        if (GameManager.Instance.isGameStart && !GameManager.Instance.isGameOver) AutoGrow();
+    }
+
+    public void SetupActive()
+    {
+        isActive = true;
+        var count = ssc.spline.GetPointCount();
+        if (count > 2)
+            for (var i = count - 1; i >= 2; i--)
+                ssc.spline.RemovePointAt(i);
+
         CreateNewPoint();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetupInactive()
+    {
+        isActive = false;
+    }
+
+    private void ShowSplinePoint()
     {
         points.Clear();
-        for (int i = 0; i < ssc.spline.GetPointCount(); i++)
+        for (var i = -1; i < ssc.spline.GetPointCount(); i++)
         {
-            Point p = new Point();
+            var p = new Point();
             p.index = i;
             p.position = ssc.spline.GetPosition(i);
             p.rightTangent = ssc.spline.GetRightTangent(i);
             points.Add(p);
         }
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            CreateNewPoint();
-        }
-
-        if (Input.GetKeyUp(KeyCode.A))
-        {
-            CreateNewPoint();
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            ChangeDirection(-0.12f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            CreateNewPoint();
-        }
-
-        if (Input.GetKeyUp(KeyCode.D))
-        {
-            CreateNewPoint();
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            ChangeDirection(0.12f);
-        }
     }
 
-    private void FixedUpdate()
+    private void ChangeDirection(float dir)
     {
-        AutoGrow();
-    }
-
-    void ChangeDirection(float dir)
-    {
-        Spline spline = ssc.spline;
-        Quaternion rotation = Quaternion.identity;
-        int i = spline.GetPointCount();
-
-        Vector3 lastPos = spline.GetPosition(i - 1);
-        Vector3 lastTangent = spline.GetRightTangent(i - 1);
+        var spline = ssc.spline;
+        var i = spline.GetPointCount();
+        var lastPos = spline.GetPosition(i - 1);
+        var lastTangent = spline.GetRightTangent(i - 1);
         // Vector3 offset = new Vector3(bias, -0.4f, 0); 
-        Vector3 offset = lastTangent.normalized;
+        var offset = lastTangent.normalized;
         offset = new Vector3(offset.x + dir * 0.5f, offset.y, offset.z);
+
+        var angle = Vector3.Angle(offset, Vector3.right);
+        if (angle < 15f || angle > 165f) return;
+
         spline.SetPosition(i - 1, lastPos + offset * (Time.deltaTime * speed));
         spline.SetRightTangent(i - 1, offset.normalized);
 
         ssc.RefreshSpriteShape();
     }
 
-    void AutoGrow()
+    private void AutoGrow()
     {
-        Spline spline = ssc.spline;
-        int i = spline.GetPointCount();
+        var spline = ssc.spline;
+        var i = spline.GetPointCount();
 
-        Vector3 lastPos = spline.GetPosition(i - 1);
-        Vector3 llPos = spline.GetPosition(i - 2);
-        Vector3 lastTangent = spline.GetRightTangent(i - 1);
-        Vector3 offset = lastTangent.normalized * 1.1f;
-        float deltaY = llPos.y - lastPos.y;
-        spline.SetPosition(i - 1, lastPos + offset * (Time.deltaTime * speed));
+        var lastPos = spline.GetPosition(i - 1);
+        var llPos = spline.GetPosition(i - 2);
+        var lastTangent = spline.GetRightTangent(i - 1);
+        var offset = lastTangent.normalized * 1.1f;
+        var deltaY = llPos.y - lastPos.y;
+        spline.SetPosition(i - 1, lastPos + offset * (Time.fixedDeltaTime * speed));
         spline.SetRightTangent(i - 1, lastTangent.normalized * (deltaY * 7.6f));
         ssc.RefreshSpriteShape();
     }
 
-    void CreateNewPoint()
+    private void CreateNewPoint()
     {
-        Spline spline = ssc.spline;
-        int i = spline.GetPointCount();
+        var spline = ssc.spline;
+        var i = spline.GetPointCount();
 
-        Vector3 lastPos = spline.GetPosition(i - 1);
-        Vector3 lastTangent = spline.GetRightTangent(i - 1).normalized;
+        var lastPos = spline.GetPosition(i - 1);
+        var lastTangent = spline.GetRightTangent(i - 1).normalized;
         spline.SetRightTangent(i - 1, lastTangent * 0.1f);
         // spline.SetPosition(i - 1, lastPos - lastTangent * 0.1f);
-        Vector3 offset = lastTangent.normalized;
+        var offset = lastTangent.normalized;
         spline.InsertPointAt(i, lastPos + 0.1f * offset);
         spline.SetTangentMode(i, ShapeTangentMode.Continuous);
         spline.SetRightTangent(i, lastTangent * 0.1f);
@@ -130,10 +134,5 @@ public class RootController : MonoBehaviour
         // spline.SetRightTangent(i, new Vector3(cum_bias, -.01f, 0) * 0.01f);
         // spline.SetLeftTangent(i, rotation * Vector3.up * tangentLength);
         ssc.RefreshSpriteShape();
-    }
-
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        Debug.Log(col.name);
     }
 }
