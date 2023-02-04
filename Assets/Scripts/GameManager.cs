@@ -23,13 +23,16 @@ public class GameManager : Singleton<GameManager>
 
     public void GameOver()
     {
+        AudioController.Instance.Lose();
         isGameOver = true;
         rootManagers[currentLevel].SetupInactive();
         CameraController.Instance.CameraShake();
+        AudioController.Instance.Lose();
     }
 
     public void GameWin()
     {
+        AudioController.Instance.Win();
         //todo: congs
         //todo: camera move 
     }

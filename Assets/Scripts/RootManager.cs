@@ -50,5 +50,6 @@ public class RootManager : MonoBehaviour
         roots[index].isUnderControl = false;
         index = (index + 1) % count;
         roots[index].isUnderControl = true;
+        AudioController.Instance.PlayChange();
     }
 }

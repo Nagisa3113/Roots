@@ -18,6 +18,7 @@ public class SpriteShapeCollider : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D col)
     {
         Debug.Log(col.name);
+        AudioController.Instance.PlayImpact();
         GameManager.Instance.GameOver();
     }
 }

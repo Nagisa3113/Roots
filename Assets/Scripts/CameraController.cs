@@ -39,7 +39,7 @@ public class CameraController : Singleton<CameraController>
 
     public CameraMoveMode mode = CameraMoveMode.ZoomMode;
 
-    private Camera camera;
+    private Camera _camera;
 
     private bool inZoomProgress;
     private bool isShaking;
@@ -54,15 +54,13 @@ public class CameraController : Singleton<CameraController>
     protected override void Awake()
     {
         base.Awake();
-        camera = GetComponent<Camera>();
+        _camera = GetComponent<Camera>();
         targetPosInfo = initPosInfo;
         inZoomProgress = true;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) ReturnToMenu();
-
         if (Vector3.Distance(targetPosInfo.position, transform.position) < 0.1f)
             inZoomProgress = false;
         else if (inZoomProgress) MoveToTarget();
@@ -100,8 +98,9 @@ public class CameraController : Singleton<CameraController>
         n.position = newPos;
         MoveToTarget(n);
         while (inZoomProgress) yield return null;
-
         mode = CameraMoveMode.FollowMode;
+
+        AudioController.Instance.GameStart();
     }
 
     public void ReturnToMenu()
@@ -117,8 +116,8 @@ public class CameraController : Singleton<CameraController>
 
     private void MoveToTarget()
     {
-        camera.orthographicSize =
-            Mathf.SmoothDamp(camera.orthographicSize, targetPosInfo.size, ref zoomVel, smoothTime);
+        _camera.orthographicSize =
+            Mathf.SmoothDamp(_camera.orthographicSize, targetPosInfo.size, ref zoomVel, smoothTime);
         transform.position = Vector3.SmoothDamp(transform.position, targetPosInfo.position, ref vel, smoothTime);
     }
 
@@ -147,6 +146,7 @@ public class CameraController : Singleton<CameraController>
         mode = CameraMoveMode.ZoomMode;
         yield return new WaitForSeconds(2f);
         ReturnToMenu();
+        AudioController.Instance.BackToTitle();
     }
 
     public void MoveToTarget(CameraPosInfo des)

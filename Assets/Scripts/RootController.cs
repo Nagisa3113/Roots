@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 
-[Serializable]
-public struct Point
-{
-    public int index;
-    public Vector3 position;
-    public Vector3 rightTangent;
-}
 
 public class RootController : MonoBehaviour
 {
