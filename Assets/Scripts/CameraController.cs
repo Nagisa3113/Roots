@@ -154,4 +154,5 @@ public class CameraController : Singleton<CameraController>
         targetPosInfo = des;
         inZoomProgress = true;
     }
+    
 }
