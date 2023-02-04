@@ -6,8 +6,7 @@ public class RootManager : MonoBehaviour
     public List<RootController> roots;
     public bool isActive;
 
-    public int index;
-
+    public int currentCtrlIndex;
     private int count;
 
     private void Update()
@@ -15,7 +14,6 @@ public class RootManager : MonoBehaviour
         if (!isActive) return;
         if (Input.GetKeyDown(KeyCode.Space)) ChangeSelectedRoot();
     }
-
 
     public void SetupInactive()
     {
@@ -39,17 +37,16 @@ public class RootManager : MonoBehaviour
             rc.SetupActive();
             roots.Add(rc);
         }
-
-        index = 0;
+        currentCtrlIndex = 0;
         count = roots.Count;
-        roots[index].isUnderControl = true;
+        roots[currentCtrlIndex].isUnderControl = true;
     }
 
     private void ChangeSelectedRoot()
     {
-        roots[index].isUnderControl = false;
-        index = (index + 1) % count;
-        roots[index].isUnderControl = true;
+        roots[currentCtrlIndex].isUnderControl = false;
+        currentCtrlIndex = (currentCtrlIndex + 1) % count;
+        roots[currentCtrlIndex].isUnderControl = true;
         AudioController.Instance.PlayChange();
     }
 }

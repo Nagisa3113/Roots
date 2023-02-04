@@ -12,7 +12,6 @@ public struct CameraPosInfo
     public float size;
 }
 
-
 public enum CameraMoveMode
 {
     FollowMode,
@@ -42,8 +41,6 @@ public class CameraController : Singleton<CameraController>
     private Camera _camera;
 
     private bool inZoomProgress;
-    private bool isShaking;
-    private bool startShake;
 
     public Vector2 CameraPosition
     {
@@ -64,13 +61,11 @@ public class CameraController : Singleton<CameraController>
         if (Vector3.Distance(targetPosInfo.position, transform.position) < 0.1f)
             inZoomProgress = false;
         else if (inZoomProgress) MoveToTarget();
+    }
 
-        if (startShake && isShaking == false)
-        {
-            isShaking = true;
-            startShake = false;
-            StartCoroutine(IECameraShake());
-        }
+    public void CameraShakeAfterGameOver()
+    {
+        StartCoroutine(IECameraShake());
     }
 
     private void LateUpdate()
@@ -103,15 +98,17 @@ public class CameraController : Singleton<CameraController>
         AudioController.Instance.GameStart();
     }
 
-    public void ReturnToMenu()
+    public IEnumerator MoveToTitleAfterWin()
     {
+        MoveToTarget(treeStartPosInfos[GameManager.Instance.currentLevel]);
+        while (inZoomProgress) yield return null;
         MoveToTarget(initPosInfo);
     }
 
-    public void CameraShake()
+
+    public void ReturnToMenu()
     {
-        startShake = true;
-        isShaking = false;
+        MoveToTarget(initPosInfo);
     }
 
     private void MoveToTarget()
@@ -142,9 +139,11 @@ public class CameraController : Singleton<CameraController>
 
             CameraPosition = origin;
         }
-        isShaking = false;
         mode = CameraMoveMode.ZoomMode;
+        yield return new WaitForSeconds(0.5f);
+        UIManager.Instance.FadeOut();
         yield return new WaitForSeconds(2f);
+        UIManager.Instance.FadeIn();
         ReturnToMenu();
         AudioController.Instance.BackToTitle();
     }
@@ -154,5 +153,4 @@ public class CameraController : Singleton<CameraController>
         targetPosInfo = des;
         inZoomProgress = true;
     }
-    
 }

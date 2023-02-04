@@ -26,7 +26,7 @@ public class GameManager : Singleton<GameManager>
         AudioController.Instance.Lose();
         isGameOver = true;
         rootManagers[currentLevel].SetupInactive();
-        CameraController.Instance.CameraShake();
+        CameraController.Instance.CameraShakeAfterGameOver();
         AudioController.Instance.Lose();
     }
 

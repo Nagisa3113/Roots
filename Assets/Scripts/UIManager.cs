@@ -9,6 +9,7 @@ public class UIManager : Singleton<UIManager>
     protected override void Awake()
     {
         base.Awake();
+        image.enabled = true;
         FadeIn();
     }
 
@@ -17,12 +18,17 @@ public class UIManager : Singleton<UIManager>
         GameManager.Instance.GameStart(index);
     }
 
-    void FadeIn()
+    public void FadeIn()
     {
-        StartCoroutine(Fade());
+        StartCoroutine(Fade(Color.black, Color.clear));
     }
 
-    IEnumerator Fade()
+    public void FadeOut()
+    {
+        StartCoroutine(Fade(Color.clear, Color.black));
+    }
+
+    IEnumerator Fade(Color src, Color des)
     {
         yield return new WaitForSeconds(.5f);
         float speed = .8f;
@@ -32,7 +38,7 @@ public class UIManager : Singleton<UIManager>
         {
             counter += speed * Time.deltaTime * speed;
             yield return 0;
-            image.color = Color.Lerp(Color.black, Color.clear, counter / timer);
+            image.color = Color.Lerp(src, des, counter / timer);
         }
     }
 }

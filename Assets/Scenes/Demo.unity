@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 193319010}
   m_Layer: 0
   m_Name: Rock (1)
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -298,7 +298,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1887494081247492234, guid: d501f6d7fa84c4038b7449696f44ff38,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -520,7 +520,7 @@ GameObject:
   - component: {fileID: 313852310}
   m_Layer: 0
   m_Name: Rock
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -603,7 +603,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1887494081247492234, guid: d501f6d7fa84c4038b7449696f44ff38,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -898,9 +898,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7a49228bc1d0a4499186e61dbb1ae77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shakeSpeed: 3
-  shakePower: 2
-  shakeTime: 1.5
+  shakeSpeed: 2
+  shakePower: 1
+  shakeTime: 1.2
   initPosInfo:
     position: {x: 0, y: 40, z: -10}
     size: 30
@@ -938,7 +938,7 @@ GameObject:
   - component: {fileID: 533636146}
   m_Layer: 0
   m_Name: Rock
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1021,7 +1021,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1887494081247492234, guid: d501f6d7fa84c4038b7449696f44ff38,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1524,7 +1524,7 @@ GameObject:
   - component: {fileID: 825693743}
   m_Layer: 0
   m_Name: Rock (1)
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1593,7 +1593,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1887494081247492234, guid: d501f6d7fa84c4038b7449696f44ff38,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2592,7 +2592,7 @@ GameObject:
   - component: {fileID: 1324260754}
   m_Layer: 0
   m_Name: Rock
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2635,7 +2635,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1887494081247492234, guid: d501f6d7fa84c4038b7449696f44ff38,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -3367,7 +3367,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1682638928
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3394,7 +3394,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1682638927}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -4144,7 +4144,7 @@ GameObject:
   - component: {fileID: 1966841429}
   m_Layer: 0
   m_Name: Rock (1)
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4227,7 +4227,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1887494081247492234, guid: d501f6d7fa84c4038b7449696f44ff38,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
