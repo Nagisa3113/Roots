@@ -25,6 +25,23 @@ public class RootManager : MonoBehaviour
     {
         if (!isActive) return;
         if (Input.GetKeyDown(KeyCode.Space)) ChangeSelectedRoot();
+
+        CheckIfWin();
+    }
+
+    void CheckIfWin()
+    {
+        bool flag = true;
+        foreach (var r in roots)
+        {
+            if (r.hasReachedGoal == false)
+            {
+                flag = false;
+            }
+        }
+
+        if (flag)
+            GameManager.Instance.GameWin();
     }
 
     public void SetupActive()
@@ -64,8 +81,14 @@ public class RootManager : MonoBehaviour
     private void ChangeSelectedRoot()
     {
         roots[currentCtrlIndex].isUnderControl = false;
-        currentCtrlIndex = (currentCtrlIndex + 1) % count;
-        roots[currentCtrlIndex].isUnderControl = true;
+
+        int nextIndex = currentCtrlIndex;
+        do
+        {
+            nextIndex = (nextIndex + 1) % count;
+        } while (roots[nextIndex].isActive == false);
+
+        roots[nextIndex].isUnderControl = true;
         AudioController.Instance.PlayChange();
     }
 }
