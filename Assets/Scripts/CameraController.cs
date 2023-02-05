@@ -24,7 +24,6 @@ public class CameraController : Singleton<CameraController>
     public float shakePower = 2.0f;
     public float shakeTime = 1.0f;
 
-    private SpriteShapeController ssc;
 
     public CameraPosInfo initPosInfo;
     public CameraPosInfo targetPosInfo;
@@ -34,6 +33,7 @@ public class CameraController : Singleton<CameraController>
     public Vector3 vel = Vector3.zero;
     private float zoomVel = 0f;
     public float smoothTime = 0.3f;
+    float followSmoothTime = 0.1f;
     public Vector3 lastRootPos;
 
     public CameraMoveMode mode = CameraMoveMode.ZoomMode;
@@ -56,18 +56,35 @@ public class CameraController : Singleton<CameraController>
         inZoomProgress = true;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         switch (mode)
         {
             case CameraMoveMode.FollowMode:
                 if (GameManager.Instance.isGameStart && !GameManager.Instance.isGameOver)
                 {
-                    ssc = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel].roots[0].ssc;
-                    lastRootPos = ssc.spline.GetPosition(ssc.spline.GetPointCount() - 1);
-                    var newPos = new Vector3(transform.position.x, lastRootPos.y, transform.position.z);
+                    Vector3 positions = Vector3.zero;
+                    Vector3 lowestPos = Vector3.zero;
+                    var rootMana = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel];
+
+                    foreach (var roc in rootMana.roots)
+                    {
+                        var rootPos = roc.ssc.spline.GetPosition(roc.ssc.spline.GetPointCount() - 1);
+                        positions += rootPos;
+                        if (rootPos.y < lowestPos.y)
+                        {
+                            lowestPos = rootPos;
+                        }
+                    }
+
+                    float yPos = positions.y;
+                    yPos /= rootMana.roots.Count;
+                    // yPos = lowestPos.y;
+                    // ssc = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel].roots[0].ssc;
+                    // lastRootPos = ssc.spline.GetPosition(ssc.spline.GetPointCount() - 1);
+                    var newPos = new Vector3(transform.position.x, yPos, transform.position.z);
                     transform.position =
-                        Vector3.SmoothDamp(transform.position, newPos, ref vel, smoothTime);
+                        Vector3.SmoothDamp(transform.position, newPos, ref vel, followSmoothTime);
                 }
 
                 break;
@@ -75,7 +92,7 @@ public class CameraController : Singleton<CameraController>
                 if (Vector3.Distance(targetPosInfo.position, transform.position) < 0.1f)
                     inZoomProgress = false;
                 else if (inZoomProgress) MoveToTarget();
-
+                
                 break;
         }
     }
@@ -95,7 +112,7 @@ public class CameraController : Singleton<CameraController>
 
         AudioController.Instance.GameStart();
 
-        ssc = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel].roots[0].ssc;
+        var ssc = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel].roots[0].ssc;
         lastRootPos = ssc.spline.GetPosition(ssc.spline.GetPointCount() - 1);
         var newPos = new Vector3(transform.position.x, lastRootPos.y, transform.position.z);
         var n = levelStartPosInfos[index];
