@@ -117,7 +117,7 @@ public class RootController : MonoBehaviour
         spline.InsertPointAt(i, lastPos + 0.1f * offset);
         spline.SetTangentMode(i, ShapeTangentMode.Continuous);
         spline.SetRightTangent(i, lastTangent * 0.1f);
-        spline.SetHeight(i, 0.3f);
+        spline.SetHeight(i, 1f);
         // spline.SetRightTangent(i, new Vector3(cum_bias, -.01f, 0) * 0.01f);
         // spline.SetLeftTangent(i, rotation * Vector3.up * tangentLength);
         ssc.RefreshSpriteShape();

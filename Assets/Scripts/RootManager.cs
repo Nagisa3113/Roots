@@ -88,7 +88,9 @@ public class RootManager : MonoBehaviour
             nextIndex = (nextIndex + 1) % count;
         } while (roots[nextIndex].isActive == false);
 
-        roots[nextIndex].isUnderControl = true;
+        currentCtrlIndex = nextIndex;
+
+        roots[currentCtrlIndex].isUnderControl = true;
         AudioController.Instance.PlayChange();
     }
 }
