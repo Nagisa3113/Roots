@@ -58,9 +58,26 @@ public class CameraController : Singleton<CameraController>
 
     private void Update()
     {
-        if (Vector3.Distance(targetPosInfo.position, transform.position) < 0.1f)
-            inZoomProgress = false;
-        else if (inZoomProgress) MoveToTarget();
+        switch (mode)
+        {
+            case CameraMoveMode.FollowMode:
+                if (GameManager.Instance.isGameStart && !GameManager.Instance.isGameOver)
+                {
+                    ssc = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel].roots[0].ssc;
+                    lastRootPos = ssc.spline.GetPosition(ssc.spline.GetPointCount() - 1);
+                    var newPos = new Vector3(transform.position.x, lastRootPos.y, transform.position.z);
+                    transform.position =
+                        Vector3.SmoothDamp(transform.position, newPos, ref vel, smoothTime);
+                }
+
+                break;
+            case CameraMoveMode.ZoomMode:
+                if (Vector3.Distance(targetPosInfo.position, transform.position) < 0.1f)
+                    inZoomProgress = false;
+                else if (inZoomProgress) MoveToTarget();
+
+                break;
+        }
     }
 
     public void CameraShakeAfterGameOver()
@@ -68,25 +85,17 @@ public class CameraController : Singleton<CameraController>
         StartCoroutine(IECameraShake());
     }
 
-    private void LateUpdate()
-    {
-        if (mode == CameraMoveMode.FollowMode)
-            if (GameManager.Instance.isGameStart && !GameManager.Instance.isGameOver)
-            {
-                ssc = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel].roots[0].ssc;
-                lastRootPos = ssc.spline.GetPosition(ssc.spline.GetPointCount() - 1);
-                var newPos = new Vector3(transform.position.x, lastRootPos.y, transform.position.z);
-                transform.position = newPos;
-            }
-    }
 
     public IEnumerator MoveToLevel(int index)
     {
-        ssc = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel].roots[0].ssc;
-        lastRootPos = ssc.spline.GetPosition(ssc.spline.GetPointCount() - 1);
+        AudioController.Instance.swoosh.Play();
+
         MoveToTarget(treeStartPosInfos[index]);
         while (inZoomProgress) yield return null;
 
+        AudioController.Instance.GameStart();
+
+        ssc = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel].roots[0].ssc;
         lastRootPos = ssc.spline.GetPosition(ssc.spline.GetPointCount() - 1);
         var newPos = new Vector3(transform.position.x, lastRootPos.y, transform.position.z);
         var n = levelStartPosInfos[index];
@@ -94,8 +103,6 @@ public class CameraController : Singleton<CameraController>
         MoveToTarget(n);
         while (inZoomProgress) yield return null;
         mode = CameraMoveMode.FollowMode;
-
-        AudioController.Instance.GameStart();
     }
 
     public IEnumerator MoveToTitleAfterWin()
@@ -133,7 +140,7 @@ public class CameraController : Singleton<CameraController>
             {
                 yield return null;
                 timeCount += Time.unscaledDeltaTime;
-                originShake += new Vector2(1, 1) * shakeSpeed * Time.unscaledDeltaTime;
+                originShake += new Vector2(1, 1) * (shakeSpeed * Time.unscaledDeltaTime);
                 CameraPosition = origin + shakePower * noise();
             }
 

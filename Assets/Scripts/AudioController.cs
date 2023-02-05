@@ -9,6 +9,7 @@ public class AudioController : Singleton<AudioController>
     public AudioSource title;
     public AudioSource change;
     public AudioSource impact;
+    public AudioSource swoosh;
 
     public void PlayAudio()
     {
@@ -17,8 +18,8 @@ public class AudioController : Singleton<AudioController>
     public void GameStart()
     {
         title.Stop();
-        growth.Play();
-        gameplay.Play();
+        growth.PlayDelayed(1.2f);
+        gameplay.PlayDelayed(1f);
     }
 
     public void Win()
@@ -35,9 +36,10 @@ public class AudioController : Singleton<AudioController>
 
     public void BackToTitle()
     {
-        title.Play();
         growth.Stop();
         gameplay.Stop();
+        swoosh.Play();
+        title.Play();
     }
 
     public void PlayChange()

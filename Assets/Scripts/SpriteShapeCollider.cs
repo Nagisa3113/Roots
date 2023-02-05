@@ -24,9 +24,9 @@ public class SpriteShapeCollider : MonoBehaviour
             GameManager.Instance.GameOver();
         }
 
-        // if (col.CompareTag("Goal") == true)
-        // {
-        //     //todo 
-        // }
+        if (col.CompareTag("Goal") == true)
+        {
+            //todo 
+        }
     }
 }
