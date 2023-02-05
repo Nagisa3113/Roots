@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RootManager : MonoBehaviour
@@ -9,21 +10,21 @@ public class RootManager : MonoBehaviour
     public int currentCtrlIndex;
     private int count;
 
+
+    public bool isTest = false;
+
+    private void Start()
+    {
+        if (isTest)
+        {
+            SetupActive();
+        }
+    }
+
     private void Update()
     {
         if (!isActive) return;
         if (Input.GetKeyDown(KeyCode.Space)) ChangeSelectedRoot();
-    }
-
-    public void SetupInactive()
-    {
-        isActive = false;
-        foreach (var r in roots)
-        {
-           r.SetupInactive();
-           r.isUnderControl = false;
-        }
-        roots.Clear();
     }
 
     public void SetupActive()
@@ -36,11 +37,29 @@ public class RootManager : MonoBehaviour
         {
             rc.SetupActive();
             roots.Add(rc);
+            if (isTest)
+            {
+                rc.isTest = true;
+            }
         }
+
         currentCtrlIndex = 0;
         count = roots.Count;
         roots[currentCtrlIndex].isUnderControl = true;
     }
+
+    public void SetupInactive()
+    {
+        isActive = false;
+        foreach (var r in roots)
+        {
+            r.SetupInactive();
+            r.isUnderControl = false;
+        }
+
+        roots.Clear();
+    }
+
 
     private void ChangeSelectedRoot()
     {

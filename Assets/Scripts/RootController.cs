@@ -10,9 +10,9 @@ public class RootController : MonoBehaviour
     public SpriteShapeController ssc;
     public bool isActive;
     public bool isUnderControl;
-
+    public bool isTest = false;
     public List<Point> points;
-    private readonly float speed = 0.4f;
+    public float speed = 0.5f;
 
 
     private void Awake()
@@ -24,7 +24,7 @@ public class RootController : MonoBehaviour
     private void Update()
     {
         if (!isUnderControl) return;
-        if (!GameManager.Instance.isGameStart || GameManager.Instance.isGameOver)
+        if (!isTest && (!GameManager.Instance.isGameStart || GameManager.Instance.isGameOver))
             return;
 
         if (Input.GetKeyDown(KeyCode.A)) CreateNewPoint();
@@ -44,7 +44,8 @@ public class RootController : MonoBehaviour
     {
         if (!isActive)
             return;
-        if (GameManager.Instance.isGameStart && !GameManager.Instance.isGameOver) AutoGrow();
+        if (isTest) AutoGrow();
+        else if (GameManager.Instance.isGameStart && !GameManager.Instance.isGameOver) AutoGrow();
     }
 
     public void SetupActive()
@@ -61,19 +62,6 @@ public class RootController : MonoBehaviour
     public void SetupInactive()
     {
         isActive = false;
-    }
-
-    private void ShowSplinePoint()
-    {
-        points.Clear();
-        for (var i = -1; i < ssc.spline.GetPointCount(); i++)
-        {
-            var p = new Point();
-            p.index = i;
-            p.position = ssc.spline.GetPosition(i);
-            p.rightTangent = ssc.spline.GetRightTangent(i);
-            points.Add(p);
-        }
     }
 
     private void ChangeDirection(float dir)

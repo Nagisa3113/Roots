@@ -17,7 +17,9 @@ public class RootTest : MonoBehaviour
     public SpriteShapeController ssc;
 
     public List<Point> points;
-    private readonly float speed = 0.7f;
+    public float speed = 0.7f;
+
+    public bool isUnderControl = false;
 
 
     private void Awake()
@@ -29,19 +31,33 @@ public class RootTest : MonoBehaviour
     private void Update()
     {
         ShowSplinePoint();
+        if (isUnderControl)
+        {
+            if (Input.GetKeyDown(KeyCode.A)) CreateNewPoint();
+            else if (Input.GetKeyUp(KeyCode.A)) CreateNewPoint();
+            else if (Input.GetKey(KeyCode.A))
+            {
+                ChangeDirection(-1.12f);
+                AutoGrow();
+            }
 
-        if (Input.GetKeyDown(KeyCode.A)) CreateNewPoint();
-        if (Input.GetKeyUp(KeyCode.A)) CreateNewPoint();
-        if (Input.GetKey(KeyCode.A)) ChangeDirection(-0.12f);
-
-        if (Input.GetKeyDown(KeyCode.D)) CreateNewPoint();
-        if (Input.GetKeyUp(KeyCode.D)) CreateNewPoint();
-        if (Input.GetKey(KeyCode.D)) ChangeDirection(0.12f);
+            else if (Input.GetKeyDown(KeyCode.D)) CreateNewPoint();
+            else if (Input.GetKeyUp(KeyCode.D)) CreateNewPoint();
+            else if (Input.GetKey(KeyCode.D))
+            {
+                ChangeDirection(1.12f);
+                AutoGrow();
+            }
+            else AutoGrow();
+        }
+        else
+        {
+            AutoGrow();
+        }
     }
 
     private void FixedUpdate()
     {
-        AutoGrow();
     }
 
 
@@ -67,7 +83,6 @@ public class RootTest : MonoBehaviour
         // Vector3 offset = new Vector3(bias, -0.4f, 0); 
         var offset = lastTangent.normalized;
         offset = new Vector3(offset.x + dir * 0.3f, offset.y, offset.z);
-
         var angle = Vector3.Angle(offset, Vector3.right);
         if (angle < 15f || angle > 165f) return;
 
@@ -81,13 +96,13 @@ public class RootTest : MonoBehaviour
     {
         var spline = ssc.spline;
         var i = spline.GetPointCount();
-
         var lastPos = spline.GetPosition(i - 1);
         var llPos = spline.GetPosition(i - 2);
         var lastTangent = spline.GetRightTangent(i - 1);
         var offset = lastTangent.normalized * 1.1f;
         var deltaY = llPos.y - lastPos.y;
-        spline.SetPosition(i - 1, lastPos + offset * (Time.fixedDeltaTime * speed));
+
+        spline.SetPosition(i - 1, lastPos + offset * (Time.deltaTime * speed));
         spline.SetRightTangent(i - 1, lastTangent.normalized * (deltaY * 10.6f));
 
         ssc.RefreshSpriteShape();
