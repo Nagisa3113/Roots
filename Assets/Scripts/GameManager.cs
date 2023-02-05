@@ -34,6 +34,8 @@ public class GameManager : Singleton<GameManager>
     {
         isGameStart = false;
         rootManagers[currentLevel].SetupInactive();
+        SpriteController.Instance.buttons[currentLevel].enabled = false;
+        SpriteController.Instance.sprites[currentLevel].sprite = SpriteController.Instance.growSprites[currentLevel];
         AudioController.Instance.Win();
         CameraController.Instance.GameWin();
     }
