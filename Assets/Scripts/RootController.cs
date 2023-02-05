@@ -11,7 +11,6 @@ public class RootController : MonoBehaviour
     public bool isActive;
     public bool isUnderControl;
     public bool isTest = false;
-    public List<Point> points;
     public float speed = 0.5f;
 
 
@@ -62,6 +61,7 @@ public class RootController : MonoBehaviour
     public void SetupInactive()
     {
         isActive = false;
+        isUnderControl = false;
     }
 
     private void ChangeDirection(float dir)

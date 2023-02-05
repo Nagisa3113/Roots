@@ -25,6 +25,8 @@ public class AudioController : Singleton<AudioController>
     public void Win()
     {
         win.Play();
+        growth.Stop();
+        gameplay.Stop();
     }
 
     public void Lose()
@@ -36,9 +38,6 @@ public class AudioController : Singleton<AudioController>
 
     public void BackToTitle()
     {
-        growth.Stop();
-        gameplay.Stop();
-        swoosh.Play();
         title.Play();
     }
 

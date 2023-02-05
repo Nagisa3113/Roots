@@ -107,11 +107,20 @@ public class CameraController : Singleton<CameraController>
 
     public IEnumerator MoveToTitleAfterWin()
     {
+        mode = CameraMoveMode.ZoomMode;
         MoveToTarget(treeStartPosInfos[GameManager.Instance.currentLevel]);
         while (inZoomProgress) yield return null;
+        yield return new WaitForSeconds(2f);
+        //todo congs
         MoveToTarget(initPosInfo);
+        while (inZoomProgress) yield return null;
+        AudioController.Instance.BackToTitle();
     }
 
+    public void GameWin()
+    {
+        StartCoroutine(MoveToTitleAfterWin());
+    }
 
     public void ReturnToMenu()
     {

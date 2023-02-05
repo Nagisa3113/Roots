@@ -32,8 +32,9 @@ public class GameManager : Singleton<GameManager>
 
     public void GameWin()
     {
+        isGameStart = false;
+        rootManagers[currentLevel].SetupInactive();
         AudioController.Instance.Win();
-        //todo: congs
-        //todo: camera move 
+        CameraController.Instance.GameWin();
     }
 }

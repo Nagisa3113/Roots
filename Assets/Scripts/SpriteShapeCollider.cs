@@ -26,7 +26,7 @@ public class SpriteShapeCollider : MonoBehaviour
 
         if (col.CompareTag("Goal") == true)
         {
-            //todo 
+            GameManager.Instance.GameWin();
         }
     }
 }
