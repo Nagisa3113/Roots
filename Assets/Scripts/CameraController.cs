@@ -40,6 +40,7 @@ public class CameraController : Singleton<CameraController>
 
     private Camera _camera;
 
+    // ssc = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel].roots[0].ssc;
     private bool inZoomProgress;
 
     public Vector2 CameraPosition
@@ -79,6 +80,7 @@ public class CameraController : Singleton<CameraController>
 
                     float yPos = positions.y;
                     yPos /= rootMana.roots.Count;
+                    yPos = rootMana.roots[0].ssc.spline.GetPosition(rootMana.roots[0].ssc.spline.GetPointCount() - 1).y;
                     // yPos = lowestPos.y;
                     // ssc = GameManager.Instance.rootManagers[GameManager.Instance.currentLevel].roots[0].ssc;
                     // lastRootPos = ssc.spline.GetPosition(ssc.spline.GetPointCount() - 1);
@@ -92,7 +94,7 @@ public class CameraController : Singleton<CameraController>
                 if (Vector3.Distance(targetPosInfo.position, transform.position) < 0.1f)
                     inZoomProgress = false;
                 else if (inZoomProgress) MoveToTarget();
-                
+
                 break;
         }
     }
