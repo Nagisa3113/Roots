@@ -11,6 +11,7 @@ public class RootController : MonoBehaviour
     public bool isActive;
     public bool isUnderControl;
     public bool isTest = false;
+    public bool hasReachedGoal = false;
     public float speed = 0.5f;
 
 
@@ -49,13 +50,18 @@ public class RootController : MonoBehaviour
 
     public void SetupActive()
     {
+        hasReachedGoal = false;
         isActive = true;
+        RespawnSpline();
+        CreateNewPoint();
+    }
+
+    void RespawnSpline()
+    {
         var count = ssc.spline.GetPointCount();
         if (count > 2)
             for (var i = count - 1; i >= 2; i--)
                 ssc.spline.RemovePointAt(i);
-
-        CreateNewPoint();
     }
 
     public void SetupInactive()

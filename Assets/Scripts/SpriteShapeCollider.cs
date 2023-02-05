@@ -4,10 +4,12 @@ using UnityEngine.U2D;
 public class SpriteShapeCollider : MonoBehaviour
 {
     private SpriteShapeController ssc;
+    private RootController rc;
 
     private void Awake()
     {
         ssc = GetComponentInParent<SpriteShapeController>();
+        rc = GetComponentInParent<RootController>();
     }
 
     private void Update()
@@ -21,12 +23,15 @@ public class SpriteShapeCollider : MonoBehaviour
         if (col.CompareTag("Obstacle") == true)
         {
             AudioController.Instance.PlayImpact();
+            //todo delay
             GameManager.Instance.GameOver();
         }
 
         if (col.CompareTag("Goal") == true)
         {
-            GameManager.Instance.GameWin();
+            rc.hasReachedGoal = true;
+            rc.SetupInactive();
+            // GameManager.Instance.GameWin();
         }
     }
 }
